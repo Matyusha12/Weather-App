@@ -8,24 +8,40 @@
     <link rel="stylesheet" href="styles/style.css">
 </head>
 <body>
-    <header>
-        <h1>Simple Weather App</h1>
-        <input type="text" id="search-bar" placeholder="Search city...">
-    </header>
-    <main>
-        <section id="current-weather">
-            <h2 id="location">Current Location</h2>
-            <p id="temp">--°C</p>
-            <p id="description">Loading...</p>
+    <div class="app">
+        <section class="hero">
+            <h1>Weather App</h1>
+            <p>Your go-to source for real-time weather updates</p>
+            <div class="search-container">
+                <input type="text" id="search-bar" placeholder="Search for a city...">
+                <button id="search-button">Search</button>
+            </div>
         </section>
-        <section id="forecast">
-            <h2>7-Day Forecast</h2>
-            <div id="forecast-cards"></div>
-        </section>
-    </main>
-    <footer>
-        <p>Weather App by Natalia</p>
-    </footer>
+
+        <main>
+            <section id="current-weather" class="card">
+                <h2 id="location">Current Location</h2>
+                <div class="weather-info">
+                    <p id="temp">--°C</p>
+                    <p id="description">Loading...</p>
+                    <img id="current-icon" src="" alt="Weather Icon" class="weather-icon" style="display:none;">
+                </div>
+            </section>
+
+            <section id="forecast">
+                <h2>7-Day Forecast</h2>
+                <div id="forecast-cards" class="forecast-grid"></div>
+            </section>
+
+            <section id="history-container" class="history-container">
+                <h3>Recently Searched Cities</h3>
+            </section>
+        </main>
+
+        <footer>
+            <p>©️2024 &#9786; Natalia Iakovleva &#9786; Utah, USA</p>
+        </footer>
+    </div>
     <script src="scripts/app.js" defer></script>
 </body>
 </html>
