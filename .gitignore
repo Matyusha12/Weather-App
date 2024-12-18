@@ -1,0 +1,20 @@
+# Node.js dependencies
+node_modules/
+
+# Logs
+*.log
+
+# API keys or sensitive files
+.env
+
+# Build artifacts
+dist/
+build/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# IDE-specific files
+.vscode/
+*.iml
