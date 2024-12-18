@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Open+Sans:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+    <header>
+        <h1>Simple Weather App</h1>
+        <input type="text" id="search-bar" placeholder="Search city...">
+    </header>
+    <main>
+        <section id="current-weather">
+            <h2 id="location">Current Location</h2>
+            <p id="temp">--°C</p>
+            <p id="description">Loading...</p>
+        </section>
+        <section id="forecast">
+            <h2>7-Day Forecast</h2>
+            <div id="forecast-cards"></div>
+        </section>
+    </main>
+    <footer>
+        <p>Weather App by Natalia</p>
+    </footer>
+    <script src="scripts/app.js" defer></script>
+</body>
+</html>
