@@ -3,7 +3,7 @@ body {
     font-family: 'Open Sans', sans-serif;
     margin: 0;
     padding: 0;
-    background: url('/images/backgr.jpg') no-repeat center center fixed;
+    background: url('/images/bck.png') no-repeat center center fixed;
     background-size: cover;
     color: #333;
     display: flex;
