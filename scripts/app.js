@@ -7,55 +7,60 @@ const searchButton = document.getElementById('search-button');
 const locationElement = document.getElementById('location');
 const tempElement = document.getElementById('temp');
 const descriptionElement = document.getElementById('description');
+const humidityElement = document.getElementById('humidity');
+const windSpeedElement = document.getElementById('wind-speed');
 const forecastCards = document.getElementById('forecast-cards');
 const currentIcon = document.getElementById('current-icon');
-const historyContainer = document.getElementById('history-container'); 
+const historyContainer = document.getElementById('history-container');
+const spinner = document.getElementById('loading-spinner');
 
-// Fetch current weather
+// Fetch Weather
 async function fetchWeather(city) {
-    const url = `${API_BASE_URL}weather?q=${city}&appid=${API_KEY}&units=metric`;
+    toggleSpinner(true);
     try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error(`Error: ${response.statusText}`);
+        const response = await fetch(`${API_BASE_URL}weather?q=${city}&appid=${API_KEY}&units=metric`);
+        if (!response.ok) throw new Error('Weather fetch failed');
         const data = await response.json();
         updateCurrentWeather(data);
-        saveCityToHistory(city); 
+        saveCity(city);
     } catch (error) {
         console.error('Failed to fetch weather data:', error);
         showError('Error loading current weather');
+    } finally {
+        toggleSpinner(false);
     }
 }
 
-// Fetch 7-day forecast
+// Fetch Forecast
 async function fetchForecast(city) {
-    const url = `${API_BASE_URL}forecast?q=${city}&appid=${API_KEY}&units=metric`;
     try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error(`Error: ${response.statusText}`);
+        const response = await fetch(`${API_BASE_URL}forecast?q=${city}&appid=${API_KEY}&units=metric`);
+        if (!response.ok) throw new Error('Forecast fetch failed');
         const data = await response.json();
         updateForecast(data.list);
     } catch (error) {
         console.error('Failed to fetch forecast data:', error);
-        forecastCards.innerHTML = '<p>Error loading forecast data</p>';
     }
 }
 
-// Update current weather
+// Update Current Weather
 function updateCurrentWeather(data) {
     if (!data || !data.main || !data.weather) {
         showError('Invalid weather data received');
         return;
     }
 
-    const icon = data.weather[0].icon;
+    const icon = data.weather[0].icon; 
     locationElement.textContent = data.name;
-    tempElement.innerHTML = `${Math.round(data.main.temp)}°C`;
+    tempElement.textContent = `${Math.round(data.main.temp)}°C`;
     descriptionElement.textContent = capitalizeFirstLetter(data.weather[0].description);
-    currentIcon.src = `https://openweathermap.org/img/wn/${icon}.png`;
-    currentIcon.style.display = 'inline';
+    humidityElement.textContent = `Humidity: ${data.main.humidity}%`;
+    windSpeedElement.textContent = `Wind Speed: ${data.wind.speed} m/s`;
+    currentIcon.src = `https://openweathermap.org/img/wn/${icon}@2x.png`; 
+    currentIcon.style.display = 'inline'; 
 }
 
-// Update 7-day forecast
+// Update Forecast
 function updateForecast(forecast) {
     if (!forecast || !Array.isArray(forecast)) {
         forecastCards.innerHTML = '<p>Invalid forecast data</p>';
@@ -64,12 +69,12 @@ function updateForecast(forecast) {
 
     forecastCards.innerHTML = ''; 
     forecast.slice(0, 7).forEach(day => {
-        const icon = day.weather[0].icon;
+        const icon = day.weather[0].icon; 
         const card = document.createElement('div');
         card.className = 'forecast-card';
         card.innerHTML = `
             <h3>${new Date(day.dt_txt).toLocaleDateString()}</h3>
-            <img src="https://openweathermap.org/img/wn/${icon}.png" alt="Weather Icon">
+            <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="Weather Icon">
             <p>${Math.round(day.main.temp)}°C</p>
             <p>${capitalizeFirstLetter(day.weather[0].description)}</p>
         `;
@@ -77,45 +82,53 @@ function updateForecast(forecast) {
     });
 }
 
-// Save city to history
-function saveCityToHistory(city) {
-    const cities = JSON.parse(localStorage.getItem('weatherCities')) || [];
+// Save City
+function saveCity(city) {
+    let cities = JSON.parse(localStorage.getItem('weatherCities')) || [];
     if (!cities.includes(city)) {
         cities.push(city);
         localStorage.setItem('weatherCities', JSON.stringify(cities));
-        updateHistory(); 
+        updateHistory();
     }
 }
 
-// Update saved cities display
+// Update History
 function updateHistory() {
     const cities = JSON.parse(localStorage.getItem('weatherCities')) || [];
     historyContainer.innerHTML = ''; 
     cities.forEach(city => {
-        const cityButton = document.createElement('button');
-        cityButton.textContent = city;
-        cityButton.className = 'history-button';
-        cityButton.addEventListener('click', () => {
+        const button = document.createElement('button');
+        button.textContent = city;
+        button.className = 'history-button';
+        button.addEventListener('click', () => {
             fetchWeather(city);
             fetchForecast(city);
         });
-        historyContainer.appendChild(cityButton);
+        historyContainer.appendChild(button);
     });
 }
 
-// Show error
+// Show Error
 function showError(message) {
     locationElement.textContent = message;
     tempElement.textContent = '--°C';
     descriptionElement.textContent = 'N/A';
-    currentIcon.style.display = 'none';
+    humidityElement.textContent = 'Humidity: --%';
+    windSpeedElement.textContent = 'Wind Speed: -- m/s';
+    currentIcon.style.display = 'none'; 
 }
 
+// Toggle Spinner
+function toggleSpinner(show) {
+    spinner.style.display = show ? 'block' : 'none';
+}
 
+// Capitalize First Letter
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+// Initialize
 searchButton.addEventListener('click', () => {
     const city = searchBar.value.trim();
     if (city) {
@@ -129,4 +142,4 @@ searchButton.addEventListener('click', () => {
 // Fetch default weather on load
 fetchWeather('New York');
 fetchForecast('New York');
-updateHistory(); 
+updateHistory();
