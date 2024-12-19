@@ -100,6 +100,12 @@ body {
 }
 
 /* Forecast Section */
+#forecast {
+    max-height: 30%; 
+    overflow-y: auto; 
+    margin-bottom: 1rem;
+    padding: 1rem;
+}
 .forecast-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
